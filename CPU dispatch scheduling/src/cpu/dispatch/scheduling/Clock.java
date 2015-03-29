@@ -10,5 +10,29 @@ package cpu.dispatch.scheduling;
  * @author tbrad_000
  */
 public class Clock {
-    
+
+    protected int tick;//Number of tick that have gone by
+
+    Clock() {
+        tick = 0;
+    }
+
+    public void tick() {
+        tick++;
+    }
+
+    /**
+     * @return the tick
+     */
+    public int getTick() {
+        return tick;
+    }
+
+    /**
+     * @param tick the tick to set
+     */
+    public void setTick(int tick) {
+        this.tick = tick;
+    }
+
 }
