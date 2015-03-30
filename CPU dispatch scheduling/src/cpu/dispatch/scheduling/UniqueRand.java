@@ -33,6 +33,7 @@ public class UniqueRand {
     UniqueRand(int min, int max) {
         this.max = max;
         this.min = min;
+        Urand();
     }
 
     /**
@@ -40,7 +41,7 @@ public class UniqueRand {
      * @return an ArrayList of unique numbers that are scrambled in a random
      * sequence between max and min
      */
-    public ArrayList<Integer> Urand() {
+    public ArrayList<Integer> Urand(int max, int min) {
         for (int i = min; i < max; i++) {
             uniquRan.add(i);
         }
@@ -62,7 +63,7 @@ public class UniqueRand {
      * @return an ArrayList of unique numbers that are scrambled in a random
      * sequence between max and min
      */
-    public ArrayList<Integer> Urand(int max, int min) {
+    public void Urand() {
         for (int i = min; i < max; i++) {
             uniquRan.add(i);
         }
@@ -74,7 +75,6 @@ public class UniqueRand {
             uniquRan.set(i, uniquRan.get(random));
             uniquRan.set(random, temp);
         }
-        return uniquRan;
     }
 
     /**
