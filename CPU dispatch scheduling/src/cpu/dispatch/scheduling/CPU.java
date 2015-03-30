@@ -12,17 +12,16 @@ import java.util.*;
  * @author tbrad_000
  */
 public class CPU {
-MyQue q = new MyQue();
     ArrayList<Process> ProcessAL = new ArrayList<>(); //Array List containing all Proccess on this Proccesor
-    MyQue CPURRHQ;//CPU Queue Round Robin High Quantum
-    MyQue CPURRLQ;//CPU Queue Round Robin Low Quantum
+    MyQue CPURRHQ = new MyQue();;//CPU Queue Round Robin High Quantum
+    MyQue CPURRLQ= new MyQue();;//CPU Queue Round Robin Low Quantum
     Queue<Process> CPUHPN = new PriorityQueue<>();//CPU Queue Higest Priority Next
-    MyQue CPUFCFS;//CPU Queue First Come First Serve
+    MyQue CPUFCFS= new MyQue();;//CPU Queue First Come First Serve
 
-    MyQue IORRHQ;//IO Queue Round Robin High Quantum
-    MyQue IORRLQ;//IO Queue Round Robin Low Quantum
+    MyQue IORRHQ= new MyQue();;//IO Queue Round Robin High Quantum
+    MyQue IORRLQ= new MyQue();;//IO Queue Round Robin Low Quantum
     Queue<Process> IOHPN = new PriorityQueue<>();////IO Queue Higest Priority Next
-    MyQue IOFCFS;//IO Queue First Come First Serve
+    MyQue IOFCFS= new MyQue();;//IO Queue First Come First Serve
 
     protected Clock clock = new Clock();//Total Time on CPU
 

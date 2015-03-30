@@ -33,6 +33,7 @@ public class UniqueRand {
     UniqueRand(int min, int max) {
         this.max = max;
         this.min = min;
+        Urand();
     }
 
     /**
@@ -40,7 +41,7 @@ public class UniqueRand {
      * @return an ArrayList of unique numbers that are scrambled in a random
      * sequence between max and min
      */
-    public ArrayList<Integer> Urand() {
+    public ArrayList<Integer> Urand(int min, int max) {
         for (int i = min; i < max; i++) {
             uniquRan.add(i);
         }
@@ -53,6 +54,26 @@ public class UniqueRand {
             uniquRan.set(random, temp);
         }
         return uniquRan;
+    }
+    /**
+     *
+     * @param max the max random number that will occur
+     * @param min the min random number that will occur
+     * @return an ArrayList of unique numbers that are scrambled in a random
+     * sequence between max and min
+     */
+    private void Urand() {
+        for (int i = min; i < max; i++) {
+            uniquRan.add(i);
+        }
+
+        for (int i = 0; i < max - min; i++) {
+            random = rand.nextInt(max - min);
+
+            temp = uniquRan.get(i);
+            uniquRan.set(i, uniquRan.get(random));
+            uniquRan.set(random, temp);
+        }
     }
 
     /**
@@ -62,20 +83,20 @@ public class UniqueRand {
      * @return an ArrayList of unique numbers that are scrambled in a random
      * sequence between max and min
      */
-    public ArrayList<Integer> Urand(int max, int min) {
-        for (int i = min; i < max; i++) {
-            uniquRan.add(i);
-        }
-
-        for (int i = 0; i < max - min; i++) {
-            random = rand.nextInt(max - min);
-
-            temp = uniquRan.get(i);
-            uniquRan.set(i, uniquRan.get(random));
-            uniquRan.set(random, temp);
-        }
-        return uniquRan;
-    }
+//    public ArrayList<Integer> Urand(int max, int min) {
+//        for (int i = min; i < max; i++) {
+//            uniquRan.add(i);
+//        }
+//
+//        for (int i = 0; i < max - min; i++) {
+//            random = rand.nextInt(max - min);
+//
+//            temp = uniquRan.get(i);
+//            uniquRan.set(i, uniquRan.get(random));
+//            uniquRan.set(random, temp);
+//        }
+//        return uniquRan;
+//    }
 
     /**
      * @return the lowest random number

@@ -13,11 +13,11 @@ public class Stats {
 
     protected int PID;//ID Number for Process
     protected int CPU;//CPU the Processor was on
-    protected int ThroughputTime;//# of processes that complete execution per time unit
+    protected int ThroughputTime;//# of processes that complete execution per time unit DO NOT USE!!!!
     protected int TurnaroundTime;//Time from submission of process till completion
-    protected int WaitTime;//Time processor spent waiting
+    protected int WaitTime;//Time processor spent waiting IN QUEUES DO NOT INCLUDE CONTEXT SWITCH
     protected int ResponseTime;//Time from submission of a request until the response begins to be recived
-    protected int ContextSwitchTime;//time taken for context switching
+    protected int ContextSwitchTime;//time taken for context switching, THIS DOES NOT ADD TO WAIT TIME
     protected int ProcessorUtilization;//The percentage of time that the processor is busy
     protected int Speedup;//
 

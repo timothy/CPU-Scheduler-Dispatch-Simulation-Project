@@ -33,7 +33,7 @@ public class CPUDispatchScheduling {
             CPU1.ProcessAL.add(ProcQueue.pop());
             if (CPU1.CPURRHQ.size() < 100){
                 CPU1.CPURRHQ.push(CPU1.ProcessAL.get(0));
-                System.out.printf("%f",CPU1.CPURRHQ.peek().getIOTime());
+                System.out.printf("%d",CPU1.CPURRHQ.peek().getIOTime());
             }
         }
     }
