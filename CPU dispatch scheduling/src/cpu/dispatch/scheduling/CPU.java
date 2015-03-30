@@ -12,16 +12,24 @@ import java.util.*;
  * @author tbrad_000
  */
 public class CPU {
-    ArrayList<Process> ProcessAL = new ArrayList<>(); //Array List containing all Proccess on this Proccesor
-    MyQue CPURRHQ = new MyQue();;//CPU Queue Round Robin High Quantum
-    MyQue CPURRLQ= new MyQue();;//CPU Queue Round Robin Low Quantum
-    Queue<Process> CPUHPN = new PriorityQueue<>();//CPU Queue Higest Priority Next
-    MyQue CPUFCFS= new MyQue();;//CPU Queue First Come First Serve
 
-    MyQue IORRHQ= new MyQue();;//IO Queue Round Robin High Quantum
-    MyQue IORRLQ= new MyQue();;//IO Queue Round Robin Low Quantum
+    ArrayList<Process> ProcessAL = new ArrayList<>(); //Array List containing all Proccess on this Proccesor
+    MyQue CPURRHQ = new MyQue();
+    ;//CPU Queue Round Robin High Quantum
+    MyQue CPURRLQ = new MyQue();
+    ;//CPU Queue Round Robin Low Quantum
+    Queue<Process> CPUHPN = new PriorityQueue<>();//CPU Queue Higest Priority Next
+    MyQue CPUFCFS = new MyQue();
+    ;//CPU Queue First Come First Serve
+
+    MyQue IORRHQ = new MyQue();
+    ;//IO Queue Round Robin High Quantum
+    MyQue IORRLQ = new MyQue();
+    ;//IO Queue Round Robin Low Quantum
     Queue<Process> IOHPN = new PriorityQueue<>();////IO Queue Higest Priority Next
-    MyQue IOFCFS= new MyQue();;//IO Queue First Come First Serve
+    MyQue IOFCFS = new MyQue();
+    ;//IO Queue First Come First Serve
+    private int count = 0; //count 3 of processes on CPU counter
 
     protected Clock clock = new Clock();//Total Time on CPU
 
@@ -44,6 +52,22 @@ public class CPU {
      */
     public void setClock(int clock) {
         this.clock.setTick(clock);
+    }
+
+    /**
+     * set increment # of process on cpu counter
+     */
+    public void incCount() {
+        this.count++;
+    }
+
+    /**
+     * count is the number of processes on the cpu
+     *
+     * @return count
+     */
+    public int getCount() {
+        return count;
     }
 
 }
