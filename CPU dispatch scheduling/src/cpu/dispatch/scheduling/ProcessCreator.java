@@ -60,8 +60,8 @@ public class ProcessCreator {
     }//Process starts without CPU will be assinded later
 
     private void MakeCTS() {
-        this.CTS = 10;
-    }//Context switch =10ms
+        this.CTS = 2;
+    }//Context switch =2ms
 
     public Process MakeProcess() {
         this.MakePID();
