@@ -5,7 +5,12 @@
  */
 package cpu.dispatch.scheduling;
 
-import java.util.*;
+import cpu.dispatch.scheduling.Process;
+import java.util.ArrayList;
+import java.util.Queue;
+import java.util.PriorityQueue;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 /**
  *
@@ -18,7 +23,19 @@ public class CPU {
     //CPU Queue Round Robin High Quantum
     public MyQue CPURRLQ = new MyQue();
     //CPU Queue Round Robin Low Quantum
-    public Queue<Process> CPUHPN = new PriorityQueue<>();//CPU Queue Higest Priority Next
+    // public PriorityQueue<Process> CPUHPN =  new PriorityQueue<>(25, comparator); ;//CPU Queue Higest Priority Next
+    PriorityQueue<Process> CPUHPN = new PriorityQueue<>(25, new Comparator<Process>() {
+        @Override
+        public int compare(Process p1, Process p2) {
+            if (p1.getPriority() < p2.getPriority()) {
+                return -1;
+            }
+            if (p1.getPriority() > p2.getPriority()) {
+                return 1;
+            }
+            return 0;
+        }
+    });
     public MyQue CPUFCFS = new MyQue();
     //CPU Queue First Come First Serve
     public MyQue IORRHQ = new MyQue();
@@ -69,4 +86,16 @@ public class CPU {
         return count;
     }
 
+    /**
+     * Check if queues are empty
+     *
+     * @return true if queues still have processes
+     */
+    public boolean hasProcesses() {
+        if ((this.CPUFCFS.size() > 0) || (this.CPUHPN.size() > 0) || (this.CPURRHQ.size() > 0) || (this.CPURRLQ.size() > 0) || (this.IOFCFS.size() > 0) || (this.IOHPN.size() > 0) || (this.IORRHQ.size() > 0) || (this.IORRLQ.size() > 0)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

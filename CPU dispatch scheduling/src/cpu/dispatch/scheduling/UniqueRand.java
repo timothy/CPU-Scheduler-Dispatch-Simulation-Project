@@ -58,7 +58,6 @@ public class UniqueRand {
         return uniquRan;
     }
 
-
     public void Urand() {
         for (int i = min; i < max; i++) {
             uniquRan.add(i);

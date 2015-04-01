@@ -90,6 +90,13 @@ public class Process {
     }
 
     /**
+     * reduce the CPUTime
+     */
+    public void decCPUTime() {
+        this.CPUTime--;
+    }
+
+    /**
      * @return the IOTime
      */
     public int getIOTime() {
@@ -101,6 +108,13 @@ public class Process {
      */
     public void setIOTime(int IOTime) {
         this.IOTime = IOTime;
+    }
+
+    /**
+     * reduce IOTime
+     */
+    public void decIOTIME() {
+        this.IOTime--;
     }
 
     /**
@@ -185,6 +199,20 @@ public class Process {
      */
     public void setContextSwitch(int ContextSwitch) {
         this.ContextSwitch = ContextSwitch;
+    }
+
+    /**
+     * Determine if the process should be doing IO
+     *
+     * @param p1 is the process in question
+     * @return true if there is > 2x time IO
+     */
+    public boolean IOInterrupt(Process p1) {
+        if ((p1.getIOTime()) > (2 * p1.getCPUTime())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
