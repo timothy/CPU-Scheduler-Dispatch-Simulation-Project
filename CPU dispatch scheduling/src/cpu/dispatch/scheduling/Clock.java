@@ -11,7 +11,7 @@ package cpu.dispatch.scheduling;
  */
 public class Clock {
 
-    private int tick;//Number of tick that have gone by
+    protected int tick;//Number of tick that have gone by
 
     Clock() {
         tick = 0;
