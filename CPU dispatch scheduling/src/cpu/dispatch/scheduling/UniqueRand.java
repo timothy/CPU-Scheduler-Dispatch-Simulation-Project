@@ -38,6 +38,8 @@ public class UniqueRand {
 
     /**
      *
+     * @param max the max random number that will occur
+     * @param min the min random number that will occur
      * @return an ArrayList of unique numbers that are scrambled in a random
      * sequence between max and min
      */
@@ -56,13 +58,7 @@ public class UniqueRand {
         return uniquRan;
     }
 
-    /**
-     *
-     * @param max the max random number that will occur
-     * @param min the min random number that will occur
-     * @return an ArrayList of unique numbers that are scrambled in a random
-     * sequence between max and min
-     */
+
     public void Urand() {
         for (int i = min; i < max; i++) {
             uniquRan.add(i);
