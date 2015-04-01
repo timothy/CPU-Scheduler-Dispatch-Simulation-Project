@@ -42,7 +42,19 @@ public class CPU {
     //IO Queue Round Robin High Quantum
     public MyQue IORRLQ = new MyQue();
     //IO Queue Round Robin Low Quantum
-    public Queue<Process> IOHPN = new PriorityQueue<>();////IO Queue Higest Priority Next
+    //public Queue<Process> IOHPN = new PriorityQueue<>(25, comparator);////IO Queue Higest Priority Next
+     PriorityQueue<Process> IOHPN = new PriorityQueue<>(25, new Comparator<Process>() {
+        @Override
+        public int compare(Process p1, Process p2) {
+            if (p1.getPriority() < p2.getPriority()) {
+                return -1;
+            }
+            if (p1.getPriority() > p2.getPriority()) {
+                return 1;
+            }
+            return 0;
+        }
+    });   
     public MyQue IOFCFS = new MyQue();
     //IO Queue First Come First Serve
     private int count = 0; //count 3 of processes on CPU counter
