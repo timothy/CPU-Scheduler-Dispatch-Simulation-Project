@@ -112,7 +112,6 @@ public class CPU {
         }
     }
 
-    
     /**
      * Process processes on each processor
      */
@@ -129,6 +128,11 @@ public class CPU {
                         if (CPURRHQ.peek().IOInterrupt(CPURRHQ.peek()) != true) {//move the process to IO if it is time for IO
                             CPURRHQ.push(CPURRHQ.pop());
                             CPURRHQ.peek().IncTimeInProc();//increment the waiting time of the remainder processes
+                            for (int k = 0; k < CPURRHQ.size(); k++) {
+                                CPURRHQ.peek().IncWaitTime();
+                                CPURRHQ.push(CPURRHQ.pop());
+                                CPURRHQ.peek().genStats();
+                            }
                         } else {//move process to IOQueue
                             CPURRHQ.peek().stats.ContextSwitchTime++;
                             IORRHQ.push(CPURRHQ.pop());
@@ -147,6 +151,11 @@ public class CPU {
                         if (IORRHQ.peek().IOInterrupt(IORRHQ.peek()) != true) {//move the process to CPU if it is time for IO done
                             IORRHQ.push(IORRHQ.pop());
                             IORRHQ.peek().IncTimeInProc();//increment the waiting time of the remainder processes
+                            for (int k = 0; k < IORRHQ.size(); k++) {
+                                IORRHQ.peek().IncWaitTime();
+                                IORRHQ.push(IORRHQ.pop());
+                                IORRHQ.peek().genStats();
+                            }
                         } else {//move process to CPUQueue
                             IORRHQ.peek().stats.ContextSwitchTime++;
                             CPURRHQ.push(IORRHQ.pop());
@@ -169,6 +178,11 @@ public class CPU {
                         if (CPURRLQ.peek().IOInterrupt(CPURRLQ.peek()) != true) {//move the process to IO if it is time for IO
                             CPURRLQ.push(CPURRLQ.pop());
                             CPURRLQ.peek().IncTimeInProc();//increment the waiting time of the remainder processes
+                            for (int k = 0; k < CPURRLQ.size(); k++) {
+                                CPURRLQ.peek().IncWaitTime();
+                                CPURRLQ.push(CPURRLQ.pop());
+                                CPURRLQ.peek().genStats();
+                            }
                         } else {//move process to IOQueue
                             CPURRLQ.peek().stats.ContextSwitchTime++;
                             IORRLQ.push(CPURRLQ.pop());
@@ -191,6 +205,11 @@ public class CPU {
                         if (IORRLQ.peek().IOInterrupt(IORRLQ.peek()) != true) {//move the process to CPU if it is time for IO done
                             IORRLQ.push(IORRLQ.pop());
                             IORRLQ.peek().IncTimeInProc();//increment the waiting time of the remainder processes
+                            for (int k = 0; k < IORRLQ.size(); k++) {
+                                IORRLQ.peek().IncWaitTime();
+                                IORRLQ.push(IORRLQ.pop());
+                                IORRLQ.peek().genStats();
+                            }
                         } else {//move process to CPUQueue
                             IORRLQ.peek().stats.ContextSwitchTime++;
                             CPURRLQ.push(IORRLQ.pop());
@@ -213,6 +232,11 @@ public class CPU {
                         if (CPUHPN.peek().IOInterrupt(CPUHPN.peek()) != true) {//move the process to IO if it is time for IO
                             CPUHPN.add(CPUHPN.poll());
                             CPUHPN.peek().IncTimeInProc();//increment the waiting time of the remainder processes
+                            for (int k = 0; k < CPUHPN.size(); k++) {
+                                CPUHPN.peek().IncWaitTime();
+                                CPUHPN.add(CPUHPN.poll());
+                                CPUHPN.peek().genStats();
+                            }
                         } else {//move process to IOQueue
                             CPUHPN.peek().stats.ContextSwitchTime++;
                             IOHPN.add(CPUHPN.poll());
@@ -235,6 +259,11 @@ public class CPU {
                         if (IOHPN.peek().IOInterrupt(IOHPN.peek()) != true) {//move the process to CPU if it is time for IO done
                             IOHPN.add(IOHPN.poll());
                             IOHPN.peek().IncTimeInProc();//increment the waiting time of the remainder processes
+                            for (int k = 0; k < IOHPN.size(); k++) {
+                                IOHPN.peek().IncWaitTime();
+                                IOHPN.add(IOHPN.poll());
+                                IOHPN.peek().genStats();
+                            }
                         } else {//move process to CPUQueue
                             IOHPN.peek().stats.ContextSwitchTime++;
                             CPUHPN.add(IOHPN.poll());
@@ -259,6 +288,11 @@ public class CPU {
                     if (CPUFCFS.peek().IOInterrupt(CPUFCFS.peek()) != true) {//move the process to IO if it is time for IO
                         CPUFCFS.push(CPUFCFS.pop());
                         CPUFCFS.peek().IncTimeInProc();//increment the waiting time of the remainder processes
+                        for (int k = 0; k < CPUFCFS.size(); k++) {
+                            CPUFCFS.peek().IncWaitTime();
+                            CPUFCFS.push(CPUFCFS.pop());
+                            CPUFCFS.peek().genStats();
+                        }
                     } else {//move process to IOQueue
                         CPUFCFS.peek().stats.ContextSwitchTime++;
                         IOFCFS.push(CPUFCFS.pop());
@@ -281,6 +315,11 @@ public class CPU {
                         if (IOFCFS.peek().IOInterrupt(IOFCFS.peek()) != true) {//move the process to CPU if it is time for IO done
                             IOFCFS.push(IOFCFS.pop());
                             IOFCFS.peek().IncTimeInProc();//increment the waiting time of the remainder processes
+                            for (int k = 0; k < IOFCFS.size(); k++) {
+                                IOFCFS.peek().IncWaitTime();
+                                IOFCFS.push(IOFCFS.pop());
+                                IOFCFS.peek().genStats();
+                            }
                         } else {//move process to CPUQueue
                             IOFCFS.peek().stats.ContextSwitchTime++;
                             CPUFCFS.push(IOFCFS.pop());
@@ -290,5 +329,27 @@ public class CPU {
                 }//end while
             }
         }//end while loop
-    }
+    }//end runProcess
+
+    /**
+     * load CPU Queues with data pass procQueue and stats.cpu#
+     *
+     * @param ProcQueue
+     * @param i
+     */
+    public void loadProces(MyQue ProcQueue, int i) {
+
+        ProcQueue.peek().stats.setCPU(i);
+        ProcessAL.add(ProcQueue.pop());
+        //Add to CPU Queue
+        if (CPURRHQ.size() < 5) {
+            CPURRHQ.push(ProcessAL.get(getCount()));
+        } else if (CPURRLQ.size() < 5) {
+            CPURRLQ.push(ProcessAL.get(getCount()));
+        } else if (CPUHPN.size() < 5) {
+            CPUHPN.add(ProcessAL.get(getCount()));
+        } else {
+            CPUFCFS.push(ProcessAL.get(getCount()));
+        }
+    }// end loadProcess
 }

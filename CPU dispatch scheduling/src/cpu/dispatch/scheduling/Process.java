@@ -215,4 +215,13 @@ public class Process {
         }
     }
 
+    /**
+     * creates stats
+     */
+    public void genStats() {
+        stats.setTurnaroundTime(this.IOTime + this.CPUTime + this.WaitTime);
+        stats.setWaitTime(WaitTime);
+
+    }
+
 }

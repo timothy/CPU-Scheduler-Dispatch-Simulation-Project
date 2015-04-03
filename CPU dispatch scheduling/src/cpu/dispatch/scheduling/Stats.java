@@ -13,7 +13,7 @@ public class Stats {
 
     protected int PID;//ID Number for Process
     protected int CPU;//CPU the Processor was on
-    protected int ThroughputTime;//# of processes that complete execution per time unit DO NOT USE!!!!
+    //protected int ThroughputTime;//# of processes that complete execution per time unit DO NOT USE!!!!
     protected int TurnaroundTime;//Time from submission of process till completion
     protected int WaitTime;//Time processor spent waiting IN QUEUES DO NOT INCLUDE CONTEXT SWITCH
     protected int ResponseTime;//Time from submission of a request until the response begins to be recived
@@ -52,17 +52,15 @@ public class Stats {
     /**
      * @return the ThroughputTime
      */
-    public int getThroughputTime() {
-        return ThroughputTime;
-    }
-
+//    public int getThroughputTime() {
+//        return ThroughputTime;
+//    }
     /**
      * @param ThroughputTime the ThroughputTime to set
      */
-    public void setThroughputTime(int ThroughputTime) {
-        this.ThroughputTime = ThroughputTime;
-    }
-
+//    public void setThroughputTime(int ThroughputTime) {
+//        this.ThroughputTime = ThroughputTime;
+//    }
     /**
      * @return the TurnaroundTime
      */
