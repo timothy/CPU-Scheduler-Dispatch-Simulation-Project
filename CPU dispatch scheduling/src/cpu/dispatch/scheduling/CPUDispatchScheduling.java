@@ -35,21 +35,21 @@ public class CPUDispatchScheduling {
             //CPU1 mostly IO
             if ((ProcQueue.peek().getIOTime() - 25) > ProcQueue.peek().getCPUTime()) {
                 //remove from procQueue and store on CPU queue
-                CPU1.loadProces(ProcQueue, 1);
+                CPU1.loadProces(ProcQueue.get(i), 1);
             }
             //CPU2 mostly CPU
             if ((ProcQueue.peek().getIOTime()) < ProcQueue.peek().getCPUTime() - 25) {
                 //remove from procQueue and store on CPU queue
-                CPU2.loadProces(ProcQueue, 2);
+                CPU2.loadProces(ProcQueue.get(i), 2);
             }
             //CPU3 mostly even IO/CPU
             if ((ProcQueue.peek().getIOTime() - ProcQueue.peek().getCPUTime()) < 10) {
                 //remove from procQueue and store on CPU queue
-                CPU3.loadProces(ProcQueue, 3);
+                CPU3.loadProces(ProcQueue.get(i), 3);
             } //CPU4 Catch all
             else //remove from procQueue and store on CPU queue
             {
-                CPU4.loadProces(ProcQueue, 4);
+                CPU4.loadProces(ProcQueue.get(i), 4);
             }
         }//End For loop for adding all proccess to CPU
 
@@ -75,17 +75,17 @@ public class CPUDispatchScheduling {
 
         for (int i = 0; i < stats.size(); i++) {
             System.out.print("***Process***\n");
-            System.out.println(stats.get(i).getPID());
+            System.out.printf("PID: %d", stats.get(i).getPID());
             System.out.print("\n");
-            System.out.println(stats.get(i).getCPU());
+            System.out.printf("CPU: %d", stats.get(i).getCPU());
             System.out.print("\n");
-            System.out.println(stats.get(i).getContextSwitchTime());
+            System.out.printf("Context Switch Time: %d",stats.get(i).getContextSwitchTime());
             System.out.print("\n");
-            System.out.println(stats.get(i).getResponseTime());
+            System.out.printf("Response Time: %d",stats.get(i).getResponseTime());
             System.out.print("\n");
-            System.out.println(stats.get(i).getTurnaroundTime());
+            System.out.printf("Turnaround Time: %d",stats.get(i).getTurnaroundTime());
             System.out.print("\n");
-            System.out.println(stats.get(i).getWaitTime());
+            System.out.printf("Wait Time: %d",stats.get(i).getWaitTime());
             System.out.print("\n");
             System.out.print("************************\n");
             System.out.print("\n");

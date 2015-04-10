@@ -144,5 +144,12 @@ public class Stats {
     public void setSpeedup(int Speedup) {
         this.Speedup = Speedup;
     }
+    
+    public void genStats(Process p){
+        int junk = 1;
+        p.stats.setTurnaroundTime(p.getTimeInProc() + p.getWaitTime());
+        p.stats.setWaitTime(p.getWaitTime());
+        p.stats.setResponseTime(8);
+    }
 
 }

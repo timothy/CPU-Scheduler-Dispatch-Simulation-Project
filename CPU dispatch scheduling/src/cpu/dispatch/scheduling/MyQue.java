@@ -30,5 +30,9 @@ public class MyQue {
     public int size() {
         return a.size();
     }
+    
+    public Process get(int i){
+        return a.get(i);
+    }
 
 }
