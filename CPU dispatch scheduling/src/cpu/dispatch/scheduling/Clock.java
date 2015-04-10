@@ -6,7 +6,7 @@
 package cpu.dispatch.scheduling;
 
 /**
- *
+ * Largely unused as this is a discrete event
  * @author tbrad_000
  */
 public class Clock {

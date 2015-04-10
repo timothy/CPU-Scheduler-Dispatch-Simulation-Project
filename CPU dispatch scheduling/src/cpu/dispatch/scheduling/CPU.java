@@ -5,61 +5,74 @@
  */
 package cpu.dispatch.scheduling;
 
-import cpu.dispatch.scheduling.Process;
 import java.util.ArrayList;
-import java.util.Queue;
-import java.util.PriorityQueue;
-import java.util.Comparator;
 import java.util.PriorityQueue;
 
 /**
+ * CPU handles Queues for processing process, methods for adding and processing
+ * process Containers for holding processes and processes stats
  *
  * @author tbrad_000
  */
 public class CPU {
 
+    /**
+     * stats used to all processes stats on cpu
+     */
     ArrayList<Stats> stats = new ArrayList<>();
+    /**
+     * ArrayList used to temp hold all processes on cpu
+     */
     ArrayList<Process> ProcessAL = new ArrayList<>(); //Array List containing all Proccess on this Proccesor
-    public MyQue CPURRHQ = new MyQue();
-    //CPU Queue Round Robin High Quantum
-    public MyQue CPURRLQ = new MyQue();
-    //CPU Queue Round Robin Low Quantum
-    // public PriorityQueue<Process> CPUHPN =  new PriorityQueue<>(25, comparator); ;//CPU Queue Higest Priority Next
-    PriorityQueue<Process> CPUHPN = new PriorityQueue<>(25, new Comparator<Process>() {
-        @Override
-        public int compare(Process p1, Process p2) {
-            if (p1.getPriority() < p2.getPriority()) {
-                return -1;
-            }
-            if (p1.getPriority() > p2.getPriority()) {
-                return 1;
-            }
-            return 0;
+    /**
+     * Used to hold processes being ran with round robin with a quantum of 4
+     */
+    public MyQue CPURRHQ = new MyQue();//CPU Queue Round Robin High Quantum
+    /**
+     * Used to hold processes being ran with round robin with a quantum of 2
+     */
+    public MyQue CPURRLQ = new MyQue();//CPU Queue Round Robin Low Quantum
+    /**
+     * Used to hold processes being ran with respect to priority
+     */
+    PriorityQueue<Process> CPUHPN = new PriorityQueue<>(25, (Process p1, Process p2) -> {// public PriorityQueue<Process> CPUHPN =  new PriorityQueue<>(25, comparator); ;//CPU Queue Higest Priority Next 
+        if (p1.getPriority() < p2.getPriority()) {
+            return -1;
         }
-    });
-    public MyQue CPUFCFS = new MyQue();
-    //CPU Queue First Come First Serve
-    public MyQue IORRHQ = new MyQue();
-    //IO Queue Round Robin High Quantum
-    public MyQue IORRLQ = new MyQue();
-    //IO Queue Round Robin Low Quantum
-    //public Queue<Process> IOHPN = new PriorityQueue<>(25, comparator);////IO Queue Higest Priority Next
-    PriorityQueue<Process> IOHPN = new PriorityQueue<>(25, new Comparator<Process>() {
-        @Override
-        public int compare(Process p1, Process p2) {
-            if (p1.getPriority() < p2.getPriority()) {
-                return -1;
-            }
-            if (p1.getPriority() > p2.getPriority()) {
-                return 1;
-            }
-            return 0;
+        if (p1.getPriority() > p2.getPriority()) {
+            return 1;
         }
+        return 0;
     });
-    public MyQue IOFCFS = new MyQue();
-    //IO Queue First Come First Serve
+    /**
+     * Clean up Queue for Processes first come first serve
+     */
+    public MyQue CPUFCFS = new MyQue();    //CPU Queue First Come First Serve
+    /**
+     * Used to hold i/o being ran with round robin with a quantum of 4
+     */
+    public MyQue IORRHQ = new MyQue();//IO Queue Round Robin High Quantum
+    /**
+     * Used to hold i/o being ran with round robin with a quantum of 2
+     */
+    public MyQue IORRLQ = new MyQue();//IO Queue Round Robin Low Quantum
+    /**
+     * Used to hold i/o being ran with respect to priority
+     */
+    PriorityQueue<Process> IOHPN = new PriorityQueue<>(25, (Process p1, Process p2) -> { //public Queue<Process> IOHPN = new PriorityQueue<>(25, comparator);////IO Queue Higest Priority Next
+        if (p1.getPriority() < p2.getPriority()) {
+            return -1;
+        }
+        if (p1.getPriority() > p2.getPriority()) {
+            return 1;
+        }
+        return 0;
+    });
+    /**
+     * Clean up Queue for i/o first come first serve
+     */
+    public MyQue IOFCFS = new MyQue();//IO Queue First Come First Serve
     private int count = 0; //count 3 of processes on CPU counter
-
     protected Clock clock = new Clock();//Total Time on CPU
 
     /**
@@ -113,7 +126,8 @@ public class CPU {
     }
 
     /**
-     * Process processes on each processor
+     * Process processes on each processor and run them through the selected
+     * queues
      */
     public void runProcesses() {
         while (hasProcesses()) {//run CPU 4 till its dry
@@ -124,13 +138,13 @@ public class CPU {
                         //stats.add(CPURRHQ.pop().stats);
                         this.CPURRHQ.peek().stats.genStats(this.CPURRHQ.pop());
                         break;
-                    }//end stats if
+                    }
                     CPURRHQ.peek().decCPUTime();//decrease the ammount of time left for the front process
                     for (int i = 1; i < CPURRHQ.size(); i++) {
                         if (CPURRHQ.peek().IOInterrupt(CPURRHQ.peek()) != true) {//move the process to IO if it is time for IO
                             CPURRHQ.peek().IncTimeInProc();//increment the waiting time of the remainder processes
                             CPURRHQ.push(CPURRHQ.pop());
-                            for (int k = 0; k < CPURRHQ.size(); k++) {
+                            for (int k = 0; k < CPURRHQ.size(); k++) {//inc wait time for remaining processes
                                 CPURRHQ.peek().IncWaitTime();
                                 CPURRHQ.peek().stats.genStats(this.CPURRHQ.peek());
                                 CPURRHQ.push(CPURRHQ.pop());
@@ -138,7 +152,7 @@ public class CPU {
                         } else {//move process to IOQueue
                             CPURRHQ.peek().stats.ContextSwitchTime++;
                             IORRHQ.push(CPURRHQ.pop());
-                        }//end move
+                        }
                     }
                     //IncClock();//increment the time that the cpu has been running}
                 }//end q4 loop CPU
@@ -149,13 +163,13 @@ public class CPU {
                         //stats.add(IORRHQ.pop().stats);
                         this.IORRHQ.peek().stats.genStats(this.IORRHQ.pop());
                         break;
-                    }//end stats if
+                    }
                     IORRHQ.peek().decCPUTime();//decrease the ammount of time left for the front process
                     for (int i = 1; i < IORRHQ.size(); i++) {
                         if (IORRHQ.peek().IOInterrupt(IORRHQ.peek()) != true) {//move the process to CPU if it is time for IO done
                             IORRHQ.peek().IncTimeInProc();//increment the waiting time of the remainder processes
                             IORRHQ.push(IORRHQ.pop());
-                            for (int k = 0; k < IORRHQ.size(); k++) {
+                            for (int k = 0; k < IORRHQ.size(); k++) {//inc i/o wait time
                                 IORRHQ.peek().IncWaitTime();
                                 IORRHQ.peek().stats.genStats(this.IORRHQ.peek());
                                 IORRHQ.push(IORRHQ.pop());
@@ -163,7 +177,7 @@ public class CPU {
                         } else {//move process to CPUQueue
                             IORRHQ.peek().stats.ContextSwitchTime++;
                             CPURRHQ.push(IORRHQ.pop());
-                        }//end move
+                        }
                     }
                     //IncClock();//increment the time that the IO has been running}
                 }//end q4 loop IO               
@@ -178,13 +192,13 @@ public class CPU {
                             //stats.add(CPURRLQ.pop().stats);
                             this.CPURRLQ.peek().stats.genStats(this.CPURRLQ.pop());
                             break;
-                        }//end stats if
+                        }
                         CPURRLQ.peek().decCPUTime();//decrease the ammount of time left for the front process
                         for (int i = 1; i < CPURRLQ.size(); i++) {
                             if (CPURRLQ.peek().IOInterrupt(CPURRLQ.peek()) != true) {//move the process to IO if it is time for IO
                                 CPURRLQ.push(CPURRLQ.pop());
                                 CPURRLQ.peek().IncTimeInProc();//increment the waiting time of the remainder processes
-                                for (int k = 0; k < CPURRLQ.size(); k++) {
+                                for (int k = 0; k < CPURRLQ.size(); k++) {//inc remaining wait time
                                     CPURRLQ.peek().IncWaitTime();
                                     CPURRLQ.peek().stats.genStats(this.CPURRLQ.peek());
                                     CPURRLQ.push(CPURRLQ.pop());
@@ -192,7 +206,7 @@ public class CPU {
                             } else {//move process to IOQueue
                                 CPURRLQ.peek().stats.ContextSwitchTime++;
                                 IORRLQ.push(CPURRLQ.pop());
-                            }//end move
+                            }
                         }
                         //IncClock();//increment the time that the cpu has been running}
                     }//end loop
@@ -208,13 +222,13 @@ public class CPU {
                         //stats.add(IORRLQ.pop().stats);
                         this.IORRLQ.peek().stats.genStats(this.IORRLQ.pop());
                         break;
-                    }//end stats if
+                    }
                     IORRLQ.peek().decCPUTime();//decrease the ammount of time left for the front process
                     for (int i = 1; i < IORRLQ.size(); i++) {
                         if (IORRLQ.peek().IOInterrupt(IORRLQ.peek()) != true) {//move the process to CPU if it is time for IO done
                             IORRLQ.peek().IncTimeInProc();//increment the waiting time of the remainder processes
                             IORRLQ.push(IORRLQ.pop());
-                            for (int k = 0; k < IORRLQ.size(); k++) {
+                            for (int k = 0; k < IORRLQ.size(); k++) {//inc remaining wait time
                                 IORRLQ.peek().IncWaitTime();
                                 IORRLQ.peek().stats.genStats(this.IORRLQ.peek());
                                 IORRLQ.push(IORRLQ.pop());
@@ -222,7 +236,7 @@ public class CPU {
                         } else {//move process to CPUQueue
                             IORRLQ.peek().stats.ContextSwitchTime++;
                             CPURRLQ.push(IORRLQ.pop());
-                        }//end move
+                        }
                     }
                     //IncClock();//increment the time that the IO has been running}
                 }//end q2 loop IO
@@ -236,13 +250,13 @@ public class CPU {
                         //stats.add(CPUHPN.poll().stats);
                         this.CPUHPN.peek().stats.genStats(this.CPUHPN.poll());
                         break;
-                    }//end stats if
+                    }
                     CPUHPN.peek().decCPUTime();//decrease the ammount of time left for the front process
                     for (int i = 1; i < CPUHPN.size(); i++) {
                         if (CPUHPN.peek().IOInterrupt(CPUHPN.peek()) != true) {//move the process to IO if it is time for IO
                             CPUHPN.peek().IncTimeInProc();//increment the waiting time of the remainder processes
                             CPUHPN.add(CPUHPN.poll());
-                            for (int k = 0; k < CPUHPN.size(); k++) {
+                            for (int k = 0; k < CPUHPN.size(); k++) {//inc remaining wait time
                                 CPUHPN.peek().IncWaitTime();
                                 CPUHPN.peek().stats.genStats(this.CPUHPN.peek());
                                 CPUHPN.add(CPUHPN.poll());
@@ -250,10 +264,10 @@ public class CPU {
                         } else {//move process to IOQueue
                             CPUHPN.peek().stats.ContextSwitchTime++;
                             IOHPN.add(CPUHPN.poll());
-                        }//end move
+                        }
                     }
                     //IncClock();//increment the time that the cpu has been running}
-                }//end q2 loop CPU
+                }//end HPN loop CPU
             } else if (IOHPN.size() > 0) {//check for processes
 //                if (IORRHQ.size() < 5) {
 //                    IORRHQ.push(IOHPN.poll());
@@ -264,24 +278,24 @@ public class CPU {
                         //stats.add(IOHPN.poll().stats);
                         this.IOHPN.peek().stats.genStats(this.IOHPN.poll());
                         break;
-                    }//end stats if
+                    }
                     IOHPN.peek().decCPUTime();//decrease the ammount of time left for the front process
                     for (int i = 1; i < IOHPN.size(); i++) {
                         if (IOHPN.peek().IOInterrupt(IOHPN.peek()) != true) {//move the process to CPU if it is time for IO done
                             IOHPN.peek().IncTimeInProc();//increment the waiting time of the remainder processes
                             IOHPN.add(IOHPN.poll());
-                            for (int k = 0; k < IOHPN.size(); k++) {
+                            for (int k = 0; k < IOHPN.size(); k++) {//inc wait time
                                 IOHPN.peek().IncWaitTime();
                                 IOHPN.peek().stats.genStats(this.IOHPN.peek());
                                 IOHPN.add(IOHPN.poll());
                             }
-                        } else {//move process to CPUQueue
+                        } else {
                             IOHPN.peek().stats.ContextSwitchTime++;
                             CPUHPN.add(IOHPN.poll());
                         }//end move
                     }
                     //IncClock();//increment the time that the IO has been running}
-                }//end while
+                }//end HPN loop
             } else if (CPUFCFS.size() > 0) {//check for processes
 //                if (CPURRHQ.size() < 5) {
 //                    CPURRHQ.push(CPUFCFS.pop());
@@ -293,14 +307,13 @@ public class CPU {
                         //stats.add(CPUFCFS.pop().stats);
                         this.CPUFCFS.peek().stats.genStats(this.CPUFCFS.pop());
                         break;
-                    }//end stats if
-
+                    }
                     CPUFCFS.peek().decCPUTime();//decrease the ammount of time left for the front process
                     for (int i = 1; i < CPUFCFS.size(); i++) {
                         if (CPUFCFS.peek().IOInterrupt(CPUFCFS.peek()) != true) {//move the process to IO if it is time for IO
                             CPUFCFS.peek().IncTimeInProc();//increment the waiting time of the remainder processes
                             CPUFCFS.push(CPUFCFS.pop());
-                            for (int k = 0; k < CPUFCFS.size(); k++) {
+                            for (int k = 0; k < CPUFCFS.size(); k++) {//inc wait time
                                 CPUFCFS.peek().IncWaitTime();
                                 CPUFCFS.peek().stats.genStats(this.CPUFCFS.peek());
                                 CPUFCFS.push(CPUFCFS.pop());
@@ -308,11 +321,11 @@ public class CPU {
                         } else {//move process to IOQueue
                             CPUFCFS.peek().stats.ContextSwitchTime++;
                             IOFCFS.push(CPUFCFS.pop());
-                        }//end move
+                        }
                     }
                 }
                 //IncClock();//increment the time that the cpu has been running}
-            }//end q2 loop CPU
+            }//end FCFS loop CPU
             else if (IOFCFS.size() > 0) {//check for processes
 //                if (IORRHQ.size() < 5) {
 //                    IORRHQ.push(IOFCFS.pop());
@@ -323,13 +336,13 @@ public class CPU {
                         //stats.add(IOFCFS.pop().stats);
                         this.IOFCFS.peek().stats.genStats(this.IOFCFS.pop());
                         break;
-                    }//end stats if
+                    }
                     IOFCFS.peek().decCPUTime();//decrease the ammount of time left for the front process
                     for (int i = 1; i < IOFCFS.size(); i++) {
                         if (IOFCFS.peek().IOInterrupt(IOFCFS.peek()) != true) {//move the process to CPU if it is time for IO done
                             IOFCFS.peek().IncTimeInProc();//increment the waiting time of the remainder processes
                             IOFCFS.push(IOFCFS.pop());
-                            for (int k = 0; k < IOFCFS.size(); k++) {
+                            for (int k = 0; k < IOFCFS.size(); k++) {//inc wait time
                                 IOFCFS.peek().IncWaitTime();
                                 IOFCFS.peek().stats.genStats(this.IOFCFS.peek());
                                 IOFCFS.push(IOFCFS.pop());
@@ -337,10 +350,10 @@ public class CPU {
                         } else {//move process to CPUQueue
                             IOFCFS.peek().stats.ContextSwitchTime++;
                             CPUFCFS.push(IOFCFS.pop());
-                        }//end move
+                        }
                     }
                     //IncClock();//increment the time that the IO has been running}
-                }//end while
+                }//end FCFS i/o time
             }
         }//end while loop
     }//end runProcess
@@ -348,11 +361,10 @@ public class CPU {
     /**
      * load CPU Queues with data pass procQueue and stats.cpu#
      *
-     * @param ProcQueue
-     * @param i
+     * @param p process
+     * @param i CPU Number
      */
     public void loadProces(Process p, int i) {
-
         p.stats.setCPU(i);
         stats.add(p.stats);
         ProcessAL.add(p);

@@ -6,20 +6,46 @@
 package cpu.dispatch.scheduling;
 
 /**
+ * Stats to be collected and stored on each process and passed back and forth to
+ * the CPU and Dispatch class for collection and review
  *
- * @author tbrad_000
+ * @author tbrad_000 and Zeus
  */
 public class Stats {
 
-    protected int PID;//ID Number for Process
-    protected int CPU;//CPU the Processor was on
+    /**
+     * ID Number for Process
+     */
+    protected int PID;
+    /**
+     * CPU the Processor was on
+     */
+    protected int CPU;
     //protected int ThroughputTime;//# of processes that complete execution per time unit DO NOT USE!!!!
-    protected int TurnaroundTime;//Time from submission of process till completion
-    protected int WaitTime;//Time processor spent waiting IN QUEUES DO NOT INCLUDE CONTEXT SWITCH
-    protected int ResponseTime;//Time from submission of a request until the response begins to be recived
-    protected int ContextSwitchTime;//time taken for context switching, THIS DOES NOT ADD TO WAIT TIME
-    protected int ProcessorUtilization;//The percentage of time that the processor is busy
-    protected int Speedup;//
+    /**
+     * Time from submission of process till completion
+     */
+    protected int TurnaroundTime;
+    /**
+     * Time processor spent waiting IN QUEUES DO NOT INCLUDE CONTEXT SWITCH
+     */
+    protected int WaitTime;
+    /**
+     * Time from submission of a request until the response begins to be recived
+     */
+    protected int ResponseTime;
+    /**
+     * time taken for context switching, THIS DOES NOT ADD TO WAIT TIME
+     */
+    protected int ContextSwitchTime;
+    /**
+     * The percentage of time that the processor is busy
+     */
+    protected int ProcessorUtilization;
+    /**
+     * will need to calculate by comparing differences
+     */
+    protected int Speedup;
 
     /**
      * @return the PID
@@ -49,15 +75,15 @@ public class Stats {
         this.CPU = CPU;
     }
 
-    /**
-     * @return the ThroughputTime
-     */
+//    /**
+//     * @return the ThroughputTime
+//     */
 //    public int getThroughputTime() {
 //        return ThroughputTime;
 //    }
-    /**
-     * @param ThroughputTime the ThroughputTime to set
-     */
+//    /**
+//     * @param ThroughputTime the ThroughputTime to set
+//     */
 //    public void setThroughputTime(int ThroughputTime) {
 //        this.ThroughputTime = ThroughputTime;
 //    }
@@ -145,6 +171,11 @@ public class Stats {
         this.Speedup = Speedup;
     }
 
+    /**
+     * generate statistics from process passed
+     *
+     * @param p process
+     */
     public void genStats(Process p) {
         int junk = 1;
         p.stats.setTurnaroundTime(p.getTimeInProc() + p.getWaitTime());

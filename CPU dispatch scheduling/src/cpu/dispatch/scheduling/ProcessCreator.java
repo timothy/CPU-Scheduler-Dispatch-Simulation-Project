@@ -5,64 +5,127 @@
  */
 package cpu.dispatch.scheduling;
 
-import java.math.*;
-
 /**
- *
- * @author tbrad_000
+ * A class to create process with random info
+ * @author Zeus
  */
 public class ProcessCreator {
 
+    /**
+     * Create UniqueRand container containing unique random numbers
+     */
     private UniqueRand u = new UniqueRand(1000, 10000);
-
+    /**
+     * Process ID Number
+     */
     private int PID;
+    /**
+     * Arrival Time
+     */
     private int ArivalT;
+    /**
+     * CPU time
+     */
     private int CPUT;
+    /**
+     * IO Time
+     */
     private int IOT;
+    /**
+     * Priority
+     */
     private int Prior;
+    /**
+     * Wait Time
+     */
     private int WT;
+    /**
+     * Time In Process
+     */
     private int TIP;
+    /**
+     * Which CPU process in son
+     */
     private int CPUN;
+    /**
+     * Context Switch
+     */
     private int CTS;
+    /**
+     * var used to keep a count
+     */
     private int count = 0;
 
+    /**
+     * call UniqueRand for individualPID
+     */
     private void MakePID() {
         this.PID = getU().getURand().get(getCount()); //UniqueRand(1000, 10000);
         setCount(getCount() + 1);
-    }//call UniqueRand for individualPID
+    }
 
+    /**
+     * create arrival time with this formula minimum +
+     * (int)(Math.random()*maximum)
+     */
     private void MakeArivalT() {
         this.ArivalT = 0 + (int) (Math.random() * 100);
-    } //minimum + (int)(Math.random()*maximum)
+    }
 
+    /**
+     * create CPU time with this formula minimum + (int)(Math.random()*maximum)
+     */
     private void MakeCPUT() {
         this.CPUT = 0 + (int) (Math.random() * 100);
-    }//minimum + (int)(Math.random()*maximum)
+    }
 
+    /**
+     * create i/o time with this formula minimum + (int)(Math.random()*maximum)
+     */
     private void MakeIOT() {
         this.IOT = 0 + (int) (Math.random() * 100);
-    }//minimum + (int)(Math.random()*maximum)
+    }
 
+    /**
+     * create priority with this formula minimum + (int)(Math.random()*maximum)
+     */
     private void MakePrior() {
         this.Prior = 0 + (int) (Math.random() * 4);
-    }//minimum + (int)(Math.random()*maximum)
+    }
 
+    /**
+     * no time as it has just been made will be updated later
+     */
     private void MakeWT() {
         this.setWT(0);
-    }//no time as it has just been made will be updated later
+    }
 
+    /**
+     * no time as it has just been made will be updated later
+     */
     private void MakeTIP() {
         this.setTIP(0);
-    }//no time as it has just been made will be updated later
+    }
 
+    /**
+     * Process starts without CPU will be updated later
+     */
     private void MakeCPUN() {
         this.setCPUN(0);
-    }//Process starts without CPU will be assinded later
+    }
 
+    /**
+     * Context switch =2ms
+     */
     private void MakeCTS() {
         this.setCTS(2);
-    }//Context switch =2ms
+    }
 
+    /**
+     * Makes a process
+     *
+     * @return a process
+     */
     public Process MakeProcess() {
         this.MakePID();
         this.MakeArivalT();

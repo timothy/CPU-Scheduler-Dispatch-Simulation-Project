@@ -6,11 +6,14 @@
 package cpu.dispatch.scheduling;
 
 import java.util.ArrayList;
-import java.util.Queue;
 
 /**
- *
- * @author tbrad_000
+ * Create a processes creator to make 100 processes, load them into a container and distribute them to select processors
+ * Uncomment the number of processors desired 1,2, or 4
+ * Have the CPUs based on number run the processes through their queues
+ * Collect processes stats and add them to an array
+ * Out put processes stats and their avgs
+ * @author Zeus
  */
 public class CPUDispatchScheduling {
 
@@ -34,27 +37,62 @@ public class CPUDispatchScheduling {
             ProcQueue.push(p1);
         }
 
+////for 1 CPU only
+//        for (int i = 0; i < ProcQueue.size(); i++) {//add the all proccess to a CPU
+//            //CPU1           
+//            //remove from procQueue and store on CPU queue
+//            CPU1.loadProces(ProcQueue.get(i), 1);
+//        }//End For loop for adding all proccess to CPU
+//
+//        CPU1.runProcesses();
+//
+//        for (int i = 0; i < CPU1.ProcessAL.size(); i++) {
+//            stats.add(CPU1.stats.get(i));
+//        }
+////for 1 CPU
+
+////for 2 CPUs
+//        for (int i = 0; i < ProcQueue.size(); i++) {//add the all proccess to a CPU
+//            //CPU1 mostly IO
+//            if (ProcQueue.get(i).getCPUTime() > ProcQueue.get(i).getIOTime()) {
+//                //remove from procQueue and store on CPU queue
+//                CPU1.loadProces(ProcQueue.get(i), 1);
+//            } //CPU2 mostly CPU
+//            else {
+//                //remove from procQueue and store on CPU queue
+//                CPU2.loadProces(ProcQueue.get(i), 2);
+//            } //CPU3 mostly even IO/CPU
+//        }//End For loop for adding all proccess to CPU
+//
+//        CPU1.runProcesses();
+//        CPU2.runProcesses();
+//
+//        for (int i = 0; i < CPU1.ProcessAL.size(); i++) {
+//            stats.add(CPU1.stats.get(i));
+//        }
+//        for (int i = 0; i < CPU2.ProcessAL.size(); i++) {
+//            stats.add(CPU2.stats.get(i));
+//        }
+////for 2 CPUs
+
+//for 4 CPU's
         for (int i = 0; i < ProcQueue.size(); i++) {//add the all proccess to a CPU
             //CPU1 mostly IO
             if ((ProcQueue.get(i).getCPUTime() - ProcQueue.get(i).getIOTime()) > 50) {
                 //remove from procQueue and store on CPU queue
                 CPU1.loadProces(ProcQueue.get(i), 1);
-                continue;
             } //CPU2 mostly CPU
             else if (ProcQueue.get(i).getIOTime() - ProcQueue.get(i).getCPUTime() > 50) {
                 //remove from procQueue and store on CPU queue
                 CPU2.loadProces(ProcQueue.get(i), 2);
-                continue;
             } //CPU3 mostly even IO/CPU
             else if (ProcQueue.get(i).getIOTime() > ProcQueue.get(i).getCPUTime()) {
                 //remove from procQueue and store on CPU queue
                 CPU3.loadProces(ProcQueue.get(i), 3);
-                continue;
             } //CPU4 Catch all
             else //remove from procQueue and store on CPU queue
             {
                 CPU4.loadProces(ProcQueue.get(i), 4);
-                continue;
             }
         }//End For loop for adding all proccess to CPU
 
@@ -75,6 +113,7 @@ public class CPUDispatchScheduling {
         for (int i = 0; i < CPU4.ProcessAL.size(); i++) {
             stats.add(CPU4.stats.get(i));
         }
+//for 4 CPUS
 
         for (int i = 0; i < stats.size(); i++) {
             System.out.print("***Process***\n");
@@ -112,7 +151,5 @@ public class CPUDispatchScheduling {
                 "Avg Wait Time: %d", waitTime / stats.size());
         System.out.print(
                 "\n");
-        //test break point
     }
-
 }

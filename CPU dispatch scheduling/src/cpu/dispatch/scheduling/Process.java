@@ -6,35 +6,78 @@
 package cpu.dispatch.scheduling;
 
 /**
- *
- * @author tbrad_000
+ * Processes contain their own stats and report them to CPU to Report to Dispatch stats arraylist
+ * @author Zeus and tbrad_000
  */
 public class Process {
 
-    protected int PidNum;//Process ID Number
-    protected int ArivalTime;//Process Arival
-    protected int CPUTime;//Total Time In CPU Queues
-    protected int IOTime;//Total Time in IO Queues
+    /**
+     * Process ID Number
+     */
+    protected int PidNum;
+    /**
+     * Process Arival
+     */
+    protected int ArivalTime;
+    /**
+     * Total Time In CPU Queues
+     */
+    protected int CPUTime;
+    /**
+     * Total Time in IO Queues
+     */
+    protected int IOTime;
+    /**
+     * Priority Level
+     */
+    protected int Priority;
+    /**
+     * Time Waiting
+     */
+    protected int WaitTime;
+    /**
+     * Time Spent Proccessing
+     */
+    protected int TimeInProc;
+    /**
+     * CPU Assigned To
+     */
+    protected int CPUNum;
+    /**
+     * stats for this processor
+     */
+    Stats stats = new Stats();
+    /**
+     * Time to perform context switch
+     */
+    protected int ContextSwitch;
+    /**
+     * use for no arg constructor to make new process
+     */
+    private ProcessCreator PC = new ProcessCreator();
 
-    protected int Priority;//Priority Level
-
-    protected int WaitTime;//Time Waiting
-    protected int TimeInProc;//Time Spent Proccessing
-
-    protected int CPUNum;//CPU Assigned To
-
-    Stats stats = new Stats();//stats for this processor
-
-    protected int ContextSwitch;//Time to perform context switch
-
-    private ProcessCreator PC = new ProcessCreator();//use for no arg constructor to make new process
-
+    /**
+     * makes new process with randomly generated info
+     */
     public Process() {
-        PC.MakeProcess();//makes new process with randomly generated info
+        PC.MakeProcess();
 
     }
 
-    public Process(int PID, int ArivalT, int CPUT, int IOT, int Prior, int WT, int TIP, int CPUN, int CTS) {//makes new process when info specified
+    /**
+     * makes new process whit the info specified
+     *
+     * @param PID Process ID Number
+     * @param ArivalT Arrival Time
+     * @param CPUT CPU TIme
+     * @param IOT IO Time
+     * @param Prior Priority
+     * @param WT Wait Time
+     * @param TIP Time in Process
+     * @param CPUN Which CPU process is on
+     * @param CTS Context Switch
+     */
+    public Process(int PID, int ArivalT, int CPUT, int IOT, int Prior, int WT, int TIP, int CPUN, int CTS) {
         this.PidNum = PID;
         this.ArivalTime = ArivalT;
         this.CPUTime = CPUT;
@@ -205,7 +248,7 @@ public class Process {
      * Determine if the process should be doing IO
      *
      * @param p1 is the process in question
-     * @return true if there is > 2x time IO
+     * @return true if there is greater then 2x time IO
      */
     public boolean IOInterrupt(Process p1) {
         if ((p1.getIOTime()) > (2 * p1.getCPUTime())) {

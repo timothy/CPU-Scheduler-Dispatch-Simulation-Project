@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
+ * Program to create and store Unique random numbers, to give some authentic
+ * flavor to our simulation
  *
  * @author tbrad_000
  */
@@ -16,13 +18,17 @@ public class UniqueRand {
 
     private int min;
     private int max;
-    private ArrayList<Integer> uniquRan = new <Integer>ArrayList();
+    private ArrayList<Integer> uniquRan;
     private int random = 0;
     private int temp = 0;
-    private Random rand = new Random();
+    private Random rand;
 
+    /**
+     * unused no arg
+     */
     UniqueRand() {
-
+        this.rand = new Random();
+        this.uniquRan = new <Integer>ArrayList();
     }
 
     /**
@@ -31,6 +37,8 @@ public class UniqueRand {
      * @param min the min random number that will occur
      */
     UniqueRand(int min, int max) {
+        this.rand = new Random();
+        this.uniquRan = new <Integer>ArrayList();
         this.max = max;
         this.min = min;
         Urand();
