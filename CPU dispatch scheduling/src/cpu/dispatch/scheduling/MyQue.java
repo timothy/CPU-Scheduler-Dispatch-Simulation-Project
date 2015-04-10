@@ -34,7 +34,7 @@ public class MyQue {
      * @return size AND REMOVE first element
      */
     public Process pop() {
-        return a.remove(a.size() - 1);
+        return a.remove(0);
     }
 
     /**
@@ -43,7 +43,7 @@ public class MyQue {
      * @return first process
      */
     public Process peek() {
-        return a.get(a.size() - 1);
+        return a.get(0);
     }
 
     /**
@@ -63,6 +63,13 @@ public class MyQue {
      */
     public Process get(int i) {
         return a.get(i);
+    }
+    
+    /**
+     * Clears all elements of MyQue
+     */
+    public void clear(){
+        a.clear();
     }
 
 }

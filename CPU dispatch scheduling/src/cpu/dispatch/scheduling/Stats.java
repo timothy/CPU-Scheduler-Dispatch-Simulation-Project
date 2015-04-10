@@ -46,6 +46,11 @@ public class Stats {
      * will need to calculate by comparing differences
      */
     protected int Speedup;
+    
+    /**
+    * Which Que it was on
+    */
+    protected String que;
 
     /**
      * @return the PID
@@ -66,6 +71,22 @@ public class Stats {
      */
     public int getCPU() {
         return CPU;
+    }
+    
+   /**
+    * 
+    * @param que which que it was on
+    */
+    public void setQue(String que){
+    
+        this.que = que;
+    }
+    /**
+     * 
+     * @return which que it was on
+     */
+    public String getQue (){
+        return this.que;
     }
 
     /**
