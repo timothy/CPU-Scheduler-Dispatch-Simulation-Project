@@ -217,6 +217,17 @@ public class CPUDispatchScheduling {
                 "Avg Wait Time for 4 CPU's: %d", waitTime4);
         System.out.print(
                 "\n");
+        System.out.print(
+                "\n");
+          System.out.printf(
+                "Speed up from 1 CPU's to 2: %f", ((double)turnAround/turnAround2));
+        System.out.print(
+                "\n");
+        System.out.printf(
+                "Speed up from 1 CPU's to 4: %f", ((double)turnAround/turnAround4));
+        System.out.print(
+                "\n");
+        
     }
 
     public static ArrayList statsGen(ArrayList Stats, int responseTime, int turnAround, int waitTime) {
