@@ -119,6 +119,7 @@ public class CPU {
         while (hasProcesses()) {//run CPU 4 till its dry
             if (CPURRHQ.size() > 0) {//check for processes
                 for (int q4 = 0; q4 < 4; q4++) {//loop for a quantam of 4
+                    this.CPURRHQ.push(this.CPURRHQ.pop());
                     if ((CPURRHQ.peek().getCPUTime() + CPURRHQ.peek().getIOTime()) < 1) {//if process is dry of cpu and io pop off queue and put process stats in stats array
                         //stats.add(CPURRHQ.pop().stats);
                         this.CPURRHQ.peek().stats.genStats(this.CPURRHQ.pop());
@@ -139,10 +140,11 @@ public class CPU {
                             IORRHQ.push(CPURRHQ.pop());
                         }//end move
                     }
-                    IncClock();//increment the time that the cpu has been running}
+                    //IncClock();//increment the time that the cpu has been running}
                 }//end q4 loop CPU
             } else if (IORRHQ.size() > 0) {//check for processes
                 for (int q4 = 0; q4 < 4; q4++) {//loop for a quantam of 4
+                    this.IORRHQ.push(this.IORRHQ.pop());
                     if ((IORRHQ.peek().getCPUTime() + IORRHQ.peek().getIOTime()) < 1) {//if process is dry of cpu and io pop off queue and put process stats in stats array
                         //stats.add(IORRHQ.pop().stats);
                         this.IORRHQ.peek().stats.genStats(this.IORRHQ.pop());
@@ -163,42 +165,45 @@ public class CPU {
                             CPURRHQ.push(IORRHQ.pop());
                         }//end move
                     }
-                    IncClock();//increment the time that the IO has been running}
+                    //IncClock();//increment the time that the IO has been running}
                 }//end q4 loop IO               
             } else if (CPURRLQ.size() > 0) {//check for processes
                 if (CPURRHQ.size() < 5) {
-                    CPURRHQ.push(CPURRLQ.pop());
-                    continue;
-                }
-                for (int q2 = 0; q2 < 2; q2++) {//loop for a quantam of 2
-                    if ((CPURRLQ.peek().getCPUTime() + CPURRLQ.peek().getIOTime()) < 1) {//if process is dry of cpu and io pop off queue and put process stats in stats array
-                        //stats.add(CPURRLQ.pop().stats);
-                        this.CPURRLQ.peek().stats.genStats(this.CPUFCFS.pop());
-                        break;
-                    }//end stats if
-                    CPURRLQ.peek().decCPUTime();//decrease the ammount of time left for the front process
-                    for (int i = 1; i < CPURRLQ.size(); i++) {
-                        if (CPURRLQ.peek().IOInterrupt(CPURRLQ.peek()) != true) {//move the process to IO if it is time for IO
-                            CPURRLQ.push(CPURRLQ.pop());
-                            CPURRLQ.peek().IncTimeInProc();//increment the waiting time of the remainder processes
-                            for (int k = 0; k < CPURRLQ.size(); k++) {
-                                CPURRLQ.peek().IncWaitTime();
-                                CPURRLQ.peek().stats.genStats(this.CPURRLQ.peek());
+//                    CPURRHQ.push(CPURRLQ.pop());
+//                    continue;
+//                }
+                    for (int q2 = 0; q2 < 2; q2++) {//loop for a quantam of 2
+                        this.CPURRLQ.push(this.CPURRLQ.pop());
+                        if ((CPURRLQ.peek().getCPUTime() + CPURRLQ.peek().getIOTime()) < 1) {//if process is dry of cpu and io pop off queue and put process stats in stats array
+                            //stats.add(CPURRLQ.pop().stats);
+                            this.CPURRLQ.peek().stats.genStats(this.CPURRLQ.pop());
+                            break;
+                        }//end stats if
+                        CPURRLQ.peek().decCPUTime();//decrease the ammount of time left for the front process
+                        for (int i = 1; i < CPURRLQ.size(); i++) {
+                            if (CPURRLQ.peek().IOInterrupt(CPURRLQ.peek()) != true) {//move the process to IO if it is time for IO
                                 CPURRLQ.push(CPURRLQ.pop());
-                            }
-                        } else {//move process to IOQueue
-                            CPURRLQ.peek().stats.ContextSwitchTime++;
-                            IORRLQ.push(CPURRLQ.pop());
-                        }//end move
-                    }
-                    IncClock();//increment the time that the cpu has been running}
-                }//end while
-            } else if (IORRLQ.size() > 0) {//check for processes
-                if (IORRHQ.size() < 5) {
-                    IORRHQ.push(IORRLQ.pop());
-                    continue;
+                                CPURRLQ.peek().IncTimeInProc();//increment the waiting time of the remainder processes
+                                for (int k = 0; k < CPURRLQ.size(); k++) {
+                                    CPURRLQ.peek().IncWaitTime();
+                                    CPURRLQ.peek().stats.genStats(this.CPURRLQ.peek());
+                                    CPURRLQ.push(CPURRLQ.pop());
+                                }
+                            } else {//move process to IOQueue
+                                CPURRLQ.peek().stats.ContextSwitchTime++;
+                                IORRLQ.push(CPURRLQ.pop());
+                            }//end move
+                        }
+                        //IncClock();//increment the time that the cpu has been running}
+                    }//end loop
                 }
+            } else if (IORRLQ.size() > 0) {//check for processes
+//                if (IORRHQ.size() < 5) {
+//                    IORRHQ.push(IORRLQ.pop());
+//                    continue;
+//                }
                 for (int q2 = 0; q2 < 2; q2++) {//loop for a quantam of 2
+                    this.IORRLQ.push(this.IORRLQ.pop());
                     if ((IORRLQ.peek().getCPUTime() + IORRLQ.peek().getIOTime()) < 1) {//if process is dry of cpu and io pop off queue and put process stats in stats array
                         //stats.add(IORRLQ.pop().stats);
                         this.IORRLQ.peek().stats.genStats(this.IORRLQ.pop());
@@ -219,14 +224,14 @@ public class CPU {
                             CPURRLQ.push(IORRLQ.pop());
                         }//end move
                     }
-                    IncClock();//increment the time that the IO has been running}
+                    //IncClock();//increment the time that the IO has been running}
                 }//end q2 loop IO
             } else if (CPUHPN.size() > 0) {//check for processes
-                if (CPURRHQ.size() < 5) {
-                    CPURRHQ.push(CPUHPN.poll());
-                    continue;
-                }
-                while (CPUHPN.size() < 0) {//run till dry
+//                if (CPURRHQ.size() < 5) {
+//                    CPURRHQ.push(CPUHPN.poll());
+//                    continue;
+//                }
+                while (CPUHPN.size() > 0) {//run till dry
                     if ((CPUHPN.peek().getCPUTime() + CPUHPN.peek().getIOTime()) < 1) {//if process is dry of cpu and io pop off queue and put process stats in stats array
                         //stats.add(CPUHPN.poll().stats);
                         this.CPUHPN.peek().stats.genStats(this.CPUHPN.poll());
@@ -247,14 +252,14 @@ public class CPU {
                             IOHPN.add(CPUHPN.poll());
                         }//end move
                     }
-                    IncClock();//increment the time that the cpu has been running}
+                    //IncClock();//increment the time that the cpu has been running}
                 }//end q2 loop CPU
             } else if (IOHPN.size() > 0) {//check for processes
-                if (IORRHQ.size() < 5) {
-                    IORRHQ.push(IOHPN.poll());
-                    continue;
-                }
-                while (IOHPN.size() < 0) {//run till dry
+//                if (IORRHQ.size() < 5) {
+//                    IORRHQ.push(IOHPN.poll());
+//                    continue;
+//                }
+                while (IOHPN.size() > 0) {//run till dry
                     if ((IOHPN.peek().getCPUTime() + IOHPN.peek().getIOTime()) < 1) {//if process is dry of cpu and io pop off queue and put process stats in stats array
                         //stats.add(IOHPN.poll().stats);
                         this.IOHPN.peek().stats.genStats(this.IOHPN.poll());
@@ -275,43 +280,44 @@ public class CPU {
                             CPUHPN.add(IOHPN.poll());
                         }//end move
                     }
-                    IncClock();//increment the time that the IO has been running}
+                    //IncClock();//increment the time that the IO has been running}
                 }//end while
             } else if (CPUFCFS.size() > 0) {//check for processes
-                if (CPURRHQ.size() < 5) {
-                    CPURRHQ.push(CPUFCFS.pop());
-                    continue;
-                }
-                while (CPUFCFS.size() > 0) //run till dry
-                {
+//                if (CPURRHQ.size() < 5) {
+//                    CPURRHQ.push(CPUFCFS.pop());
+//                    continue;
+//                }
+                while (CPUFCFS.size() > 0) { //run till dry
+
                     if ((CPUFCFS.peek().getCPUTime() + CPUFCFS.peek().getIOTime()) < 1) {//if process is dry of cpu and io pop off queue and put process stats in stats array
                         //stats.add(CPUFCFS.pop().stats);
                         this.CPUFCFS.peek().stats.genStats(this.CPUFCFS.pop());
                         break;
                     }//end stats if
-                }
-                CPUFCFS.peek().decCPUTime();//decrease the ammount of time left for the front process
-                for (int i = 1; i < CPUFCFS.size(); i++) {
-                    if (CPUFCFS.peek().IOInterrupt(CPUFCFS.peek()) != true) {//move the process to IO if it is time for IO
-                        CPUFCFS.peek().IncTimeInProc();//increment the waiting time of the remainder processes
-                        CPUFCFS.push(CPUFCFS.pop());
-                        for (int k = 0; k < CPUFCFS.size(); k++) {
-                            CPUFCFS.peek().IncWaitTime();
-                            CPUFCFS.peek().stats.genStats(this.CPUFCFS.peek());
+
+                    CPUFCFS.peek().decCPUTime();//decrease the ammount of time left for the front process
+                    for (int i = 1; i < CPUFCFS.size(); i++) {
+                        if (CPUFCFS.peek().IOInterrupt(CPUFCFS.peek()) != true) {//move the process to IO if it is time for IO
+                            CPUFCFS.peek().IncTimeInProc();//increment the waiting time of the remainder processes
                             CPUFCFS.push(CPUFCFS.pop());
-                        }
-                    } else {//move process to IOQueue
-                        CPUFCFS.peek().stats.ContextSwitchTime++;
-                        IOFCFS.push(CPUFCFS.pop());
-                    }//end move
+                            for (int k = 0; k < CPUFCFS.size(); k++) {
+                                CPUFCFS.peek().IncWaitTime();
+                                CPUFCFS.peek().stats.genStats(this.CPUFCFS.peek());
+                                CPUFCFS.push(CPUFCFS.pop());
+                            }
+                        } else {//move process to IOQueue
+                            CPUFCFS.peek().stats.ContextSwitchTime++;
+                            IOFCFS.push(CPUFCFS.pop());
+                        }//end move
+                    }
                 }
-                IncClock();//increment the time that the cpu has been running}
+                //IncClock();//increment the time that the cpu has been running}
             }//end q2 loop CPU
             else if (IOFCFS.size() > 0) {//check for processes
-                if (IORRHQ.size() < 5) {
-                    IORRHQ.push(IOFCFS.pop());
-                    continue;
-                }
+//                if (IORRHQ.size() < 5) {
+//                    IORRHQ.push(IOFCFS.pop());
+//                    continue;
+//                }
                 while (IOFCFS.size() > 0) { //run till dry
                     if ((IOFCFS.peek().getCPUTime() + IOFCFS.peek().getIOTime()) < 1) {//if process is dry of cpu and io pop off queue and put process stats in stats array
                         //stats.add(IOFCFS.pop().stats);
@@ -333,7 +339,7 @@ public class CPU {
                             CPUFCFS.push(IOFCFS.pop());
                         }//end move
                     }
-                    IncClock();//increment the time that the IO has been running}
+                    //IncClock();//increment the time that the IO has been running}
                 }//end while
             }
         }//end while loop
