@@ -25,11 +25,12 @@ public class CPUDispatchScheduling {
     static ArrayList<Double> turnaround = new ArrayList<>();
     static ArrayList<Double> response = new ArrayList<>();
     static ArrayList<Double> wait = new ArrayList<>();
-    static ArrayList<Double> avgturnaround = new ArrayList<>();
-    static ArrayList<Double> avgresponse = new ArrayList<>();
-    static ArrayList<Double> avgwait = new ArrayList<>();
+    static ArrayList<Double> context = new ArrayList<>();
 
     public static void main(String[] args) {
+        int contextswitches = 0;
+        int contextswitches2 = 0;
+        int contextswitches4 = 0;
         int responseTime = 0;
         int turnAround = 0;
         int waitTime = 0;
@@ -78,12 +79,14 @@ public class CPUDispatchScheduling {
                 stats.add(CPU1.stats.get(i));
             }
 
-            avgs = statsGen(stats, responseTime, turnAround, waitTime);
+            avgs = statsGen(stats, responseTime, contextswitches, turnAround, waitTime);
             responseTime = avgs.get(0);
-            turnAround = avgs.get(1);
-            waitTime = avgs.get(2);
+            contextswitches = avgs.get(1);
+            turnAround = avgs.get(2);
+            waitTime = avgs.get(3);
 
             graph.start(response, "1 CPU response");
+            //graph.start(context, "1 CPU Context Switchs");
             graph.start(turnaround, "1 CPU turnaround");
             graph.start(wait, "1 CPU wait");
 
@@ -124,12 +127,14 @@ public class CPUDispatchScheduling {
             for (int i = 0; i < CPU2.ProcessAL.size(); i++) {
                 stats.add(CPU2.stats.get(i));
 
-                avgs = statsGen(stats, responseTime, turnAround, waitTime);
+                avgs = statsGen(stats, responseTime, contextswitches, turnAround, waitTime);
                 responseTime2 = avgs.get(0) / 2;
-                turnAround2 = avgs.get(1) / 2;
-                waitTime2 = avgs.get(2) / 2;
+                contextswitches2 = avgs.get(1) / 2;
+                turnAround2 = avgs.get(2) / 2;
+                waitTime2 = avgs.get(3) / 2;
             }
             graph.start(response, "2 CPU response");
+            //graph.start(context, "2 CPU Context Switchs");
             graph.start(turnaround, "2 CPU turnaround");
             graph.start(wait, "2 CPU wait");
 //for 2 CPUs
@@ -196,15 +201,16 @@ public class CPUDispatchScheduling {
             for (int i = 0; i < CPU4.ProcessAL.size(); i++) {
                 stats.add(CPU4.stats.get(i));
             }
+            avgs = statsGen(stats, responseTime, contextswitches, turnAround, waitTime);
+            responseTime4 = avgs.get(0) / 2;
+            contextswitches4 = avgs.get(1) / 2;
+            turnAround4 = avgs.get(2) / 2;
+            waitTime4 = avgs.get(3) / 2;
 
             graph.start(response, "4 CPU response");
+           // graph.start(context, "4 CPU Context Switchs");
             graph.start(turnaround, "4 CPU turnaround");
             graph.start(wait, "4 CPU wait");
-
-            avgs = statsGen(stats, responseTime, turnAround, waitTime);
-            responseTime4 = avgs.get(0) / 4;
-            turnAround4 = avgs.get(1) / 4;
-            waitTime4 = avgs.get(2) / 4;
 
 //for 4 CPUS
             System.out.printf("***For a Round Robin Time Quantum of %d and %d***", HQ, LQ);
@@ -214,6 +220,10 @@ public class CPUDispatchScheduling {
                     "\n");
             System.out.printf(
                     "Avg Response Time for 1 CPU's: %d", responseTime);
+            System.out.print(
+                    "\n");
+            System.out.printf(
+                    "Avg Context Switches for 1 CPU's: %d", contextswitches);
             System.out.print(
                     "\n");
             System.out.printf(
@@ -231,6 +241,10 @@ public class CPUDispatchScheduling {
             System.out.print(
                     "\n");
             System.out.printf(
+                    "Avg Context Switches for 2 CPU's: %d", contextswitches2);
+            System.out.print(
+                    "\n");
+            System.out.printf(
                     "Avg Tunaround Time for 2 CPU's: %d", turnAround2);
             System.out.print(
                     "\n");
@@ -242,6 +256,10 @@ public class CPUDispatchScheduling {
                     "\n");
             System.out.printf(
                     "Avg Response Time for 4 CPU's: %d", responseTime4);
+            System.out.print(
+                    "\n");
+            System.out.printf(
+                    "Avg Context Switches for 4 CPU's: %d", contextswitches4);
             System.out.print(
                     "\n");
             System.out.printf(
@@ -259,7 +277,7 @@ public class CPUDispatchScheduling {
             System.out.print(
                     "\n");
             System.out.printf(
-                    "Speed up from 1 CPU's to 4: %f", (double) (1 / (1 - ((double) turnAround4 / (double) turnAround)) + ((1 - ((double) turnAround4 / (double) turnAround)) / 4)) / 4);
+                    "Speed up from 2 CPU's to 4: %f", (double) (1 / (1 - ((double) turnAround4 / (double) turnAround)) + ((1 - ((double) turnAround4 / (double) turnAround)) / 4)) / 4);
             System.out.print(
                     "\n");
             HQ -= 10;
@@ -269,7 +287,7 @@ public class CPUDispatchScheduling {
         }
     }
 
-    public static ArrayList statsGen(ArrayList Stats, int responseTime, int turnAround, int waitTime) {
+    public static ArrayList statsGen(ArrayList Stats, int responseTime, int contextswitches, int turnAround, int waitTime) {
         ArrayList<Stats> stats = new ArrayList<>();
         ArrayList<Integer> avgs = new ArrayList<>();
         stats = Stats;
@@ -286,6 +304,8 @@ public class CPUDispatchScheduling {
             response.add((double) responseTime);
 //            System.out.print("\n");
 //            System.out.printf("Turnaround Time: %d", stats.get(i).getTurnaroundTime());
+            contextswitches += stats.get(i).getContextSwitchTime();
+            context.add((double) contextswitches);
             turnAround += stats.get(i).getTurnaroundTime();
             turnaround.add((double) turnAround);
 //            System.out.print("\n");
@@ -300,6 +320,7 @@ public class CPUDispatchScheduling {
 //            System.out.print("\n");
         }
         avgs.add(responseTime / stats.size());
+        avgs.add(contextswitches / stats.size());
         avgs.add(turnAround / stats.size());
         avgs.add(waitTime / stats.size());
         return avgs;
