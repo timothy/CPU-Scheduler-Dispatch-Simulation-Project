@@ -1,3 +1,5 @@
+//Curtosy of https://gist.github.com/roooodcastro/6325153 Rodrigo Castro
+
 package cpu.dispatch.scheduling;
 
 import java.awt.BasicStroke;
