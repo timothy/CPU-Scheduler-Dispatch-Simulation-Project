@@ -6,6 +6,7 @@
 package cpu.dispatch.scheduling;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Create a processes creator to make 100 processes, load them into a container
@@ -21,6 +22,13 @@ public class CPUDispatchScheduling {
     /**
      * @param args the command line arguments
      */
+    static ArrayList<Double> turnaround = new ArrayList<>();
+    static ArrayList<Double> response = new ArrayList<>();
+    static ArrayList<Double> wait = new ArrayList<>();
+    static ArrayList<Double> avgturnaround = new ArrayList<>();
+    static ArrayList<Double> avgresponse = new ArrayList<>();
+    static ArrayList<Double> avgwait = new ArrayList<>();
+
     public static void main(String[] args) {
         int responseTime = 0;
         int turnAround = 0;
@@ -39,6 +47,9 @@ public class CPUDispatchScheduling {
         ArrayList<Integer> avgs = new ArrayList<>();
         ProcessCreator PC = new ProcessCreator();
         MyQue ProcQueue = new MyQue();
+        GraphPanel graph = new GraphPanel();
+        int HQ = 28;
+        int LQ = 8;
 
         for (int i = 0; i < 100; i++) { //Make X (100) processes and store them in ProcQueue
             Process p1 = PC.MakeProcess();
@@ -46,6 +57,7 @@ public class CPUDispatchScheduling {
         }
 
 //for 1 CPU only
+        response.clear();
         CPU1.clear();
         for (int i = 0; i < ProcQueue.size(); i++) {//add the all proccess to a CPU
             //CPU1           
@@ -53,8 +65,8 @@ public class CPUDispatchScheduling {
             CPU1.loadProces(ProcQueue.get(i), 1);
         }//End For loop for adding all proccess to CPU
 
-        CPU1.runProcessesRR(8);
-        CPU1.runProcessesRR(2);
+        CPU1.runProcessesRR(HQ);
+        CPU1.runProcessesRR(LQ);
         CPU1.runProcessesHPN();
         CPU1.runProcessesFCFS();
         avgs.clear();
@@ -67,9 +79,17 @@ public class CPUDispatchScheduling {
         responseTime = avgs.get(0);
         turnAround = avgs.get(1);
         waitTime = avgs.get(2);
+        
+        graph.start(response, "1 CPU response");
+        graph.start(turnaround, "1 CPU turnaround" );
+        graph.start(wait, "1 CPU wait");
+        
 //for 1 CPU
 
 //for 2 CPUs
+        response.clear();
+        turnaround.clear();
+        wait.clear();
         CPU1.clear();
         CPU2.clear();
         for (int i = 0; i < ProcQueue.size(); i++) {//add the all proccess to a CPU
@@ -84,16 +104,16 @@ public class CPUDispatchScheduling {
             } //CPU3 mostly even IO/CPU
         }//End For loop for adding all proccess to CPU
 
-        CPU1.runProcessesRR(8);
-        CPU1.runProcessesRR(2);
+        CPU1.runProcessesRR(HQ);
+        CPU1.runProcessesRR(LQ);
         CPU1.runProcessesHPN();
         CPU1.runProcessesFCFS();
-        
-        CPU2.runProcessesRR(8);
-        CPU2.runProcessesRR(2);
+
+        CPU2.runProcessesRR(HQ);
+        CPU2.runProcessesRR(LQ);
         CPU2.runProcessesHPN();
         CPU2.runProcessesFCFS();
-        
+
         avgs.clear();
         stats.clear();
         for (int i = 0; i < CPU1.ProcessAL.size(); i++) {
@@ -103,13 +123,19 @@ public class CPUDispatchScheduling {
             stats.add(CPU2.stats.get(i));
 
             avgs = statsGen(stats, responseTime, turnAround, waitTime);
-            responseTime2 = avgs.get(0)/2;
-            turnAround2 = avgs.get(1)/2;
-            waitTime2 = avgs.get(2)/2;
+            responseTime2 = avgs.get(0) / 2;
+            turnAround2 = avgs.get(1) / 2;
+            waitTime2 = avgs.get(2) / 2;
         }
+        graph.start(response, "2 CPU response");
+        graph.start(turnaround, "2 CPU turnaround" );
+        graph.start(wait, "2 CPU wait");
 //for 2 CPUs
 
 //for 4 CPU's
+        response.clear();
+        turnaround.clear();
+        wait.clear();
         CPU1.clear();
         CPU2.clear();
         CPU3.clear();
@@ -134,26 +160,26 @@ public class CPUDispatchScheduling {
             }
         }//End For loop for adding all proccess to CPU
 
-        CPU1.runProcessesRR(8);
-        CPU1.runProcessesRR(2);
+        CPU1.runProcessesRR(HQ);
+        CPU1.runProcessesRR(LQ);
         CPU1.runProcessesHPN();
         CPU1.runProcessesFCFS();
-        
+
+        CPU2.runProcessesRR(40);
         CPU2.runProcessesRR(8);
-        CPU2.runProcessesRR(2);
         CPU2.runProcessesHPN();
         CPU2.runProcessesFCFS();
-        
-        CPU3.runProcessesRR(8);
-        CPU3.runProcessesRR(2);
+
+        CPU3.runProcessesRR(HQ);
+        CPU3.runProcessesRR(LQ);
         CPU3.runProcessesHPN();
         CPU3.runProcessesFCFS();
-        
-        CPU4.runProcessesRR(8);
-        CPU4.runProcessesRR(2);
+
+        CPU4.runProcessesRR(HQ);
+        CPU4.runProcessesRR(LQ);
         CPU4.runProcessesHPN();
         CPU4.runProcessesFCFS();
-        
+
         avgs.clear();
         stats.clear();
         for (int i = 0; i < CPU1.ProcessAL.size(); i++) {
@@ -169,10 +195,15 @@ public class CPUDispatchScheduling {
             stats.add(CPU4.stats.get(i));
         }
 
+        graph.start(response, "4 CPU response");
+        graph.start(turnaround, "4 CPU turnaround" );
+        graph.start(wait, "4 CPU wait");
+        
         avgs = statsGen(stats, responseTime, turnAround, waitTime);
-        responseTime4 = avgs.get(0)/4;
-        turnAround4 = avgs.get(1)/4;
-        waitTime4 = avgs.get(2)/4;
+        responseTime4 = avgs.get(0) / 4;
+        turnAround4 = avgs.get(1) / 4;
+        waitTime4 = avgs.get(2) / 4;
+        
 //for 4 CPUS
 
         System.out.print(
@@ -219,15 +250,14 @@ public class CPUDispatchScheduling {
                 "\n");
         System.out.print(
                 "\n");
-          System.out.printf(
-                "Speed up from 1 CPU's to 2: %f", ((double)turnAround/turnAround2));
+        System.out.printf(
+                "Speed up from 1 CPU's to 2: %f", (double)(1/(1-((double)turnAround2 / (double)turnAround))+((1-((double)turnAround2 / (double)turnAround))/2))/4);
         System.out.print(
                 "\n");
         System.out.printf(
-                "Speed up from 1 CPU's to 4: %f", ((double)turnAround/turnAround4));
+                "Speed up from 1 CPU's to 4: %f", (double)(1/(1-((double)turnAround4 / (double)turnAround))+((1-((double)turnAround4 / (double)turnAround))/4))/4);
         System.out.print(
                 "\n");
-        
     }
 
     public static ArrayList statsGen(ArrayList Stats, int responseTime, int turnAround, int waitTime) {
@@ -244,12 +274,15 @@ public class CPUDispatchScheduling {
             System.out.print("\n");
             System.out.printf("Response Time: %d", stats.get(i).getResponseTime());
             responseTime += stats.get(i).getResponseTime();
+            response.add((double)responseTime);
             System.out.print("\n");
             System.out.printf("Turnaround Time: %d", stats.get(i).getTurnaroundTime());
             turnAround += stats.get(i).getTurnaroundTime();
+            turnaround.add((double)turnAround);
             System.out.print("\n");
             System.out.printf("Wait Time: %d", stats.get(i).getWaitTime());
             waitTime += stats.get(i).getWaitTime();
+            wait.add((double)waitTime);
             System.out.print("\n");
             System.out.printf("On Queue: %s", stats.get(i).getQue());
             System.out.print("\n");
